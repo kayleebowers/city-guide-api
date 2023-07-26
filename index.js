@@ -60,8 +60,8 @@ app.delete("/users/:id", (req, res) => {
 
 // Return a list of all activities to the user	/activities	GET
 app.get("/activities", (req, res) => {
-    Activities.find();
-    then((activities) => {
+    Activities.find()
+    .then((activities) => {
         res.status(200).json(activities)
     }).catch((error) => {
         console.error(error);
