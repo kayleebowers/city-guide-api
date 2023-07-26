@@ -6,10 +6,16 @@ const express = require("express"),
     path = require("path"),
     fs = require('fs'),
     //add cors to manage request origins
-    cors = require("cors");
+    cors = require("cors"),
+    // add ODM
+    mongoose = require('mongoose'),
+    models = require('./models.js');
 
-const app = express(); 
+const app = express(),
+    Activities = models.Activity,
+    Users = models.User; 
 
+mongoose.connect();
 //order: logging, user authentication, JSON parsing, static file serving, and app routing
 
 //create log stream
