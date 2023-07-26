@@ -1,4 +1,5 @@
 const express = require("express"),
+    //middleware to read json in req.body
     bodyParser = require("body-parser"),
     //modules to log data, work with directories/file paths, write file streams
     morgan = require("morgan"),
@@ -14,6 +15,10 @@ const logStream = fs.createWriteStream(path.join(__dirname, "log.txt"), { flags:
 
 //log HTTP method, date, endpoint, req status, res length
 app.use(morgan(":method :date[web] :url :status :res[content-length]", { stream: logStream }));
+
+//use bodyParser to read req.body JSON data and populate it in response body
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // Allow new users to register	/users	POST
 app.post("/users", (req, res) => {
