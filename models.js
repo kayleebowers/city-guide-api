@@ -25,3 +25,7 @@ let userSchema = mongoose.Schema({
 //declare models
 let Activity = mongoose.model("Activity", activitySchema);
 let User = mongoose.model("User", userSchema);
+
+//export models 
+module.exports.Activity = Activity;
+module.exports.User = User;
