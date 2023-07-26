@@ -18,6 +18,12 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, "public/documentation.html"));
 })
 
+//add error handling middleware to catch any other errors
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send("Something went wrong");
+  });
+  
 const PORT = process.env.PORT || 8080;
 
 app.listen(PORT, () => {
