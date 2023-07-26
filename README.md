@@ -13,3 +13,6 @@ The Pegasus City Guide API is a Node.js and Express application that provides us
 * Users can add or remove an activity from their to-do list
 * Users can view all their completed activities
 * Users can add or remove activities from their list of completed items
+
+## Get the Project Running
+To use locally, download the project files and run the command `npm run dev`.
