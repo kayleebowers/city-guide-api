@@ -1,0 +1,21 @@
+{
+  "name": "city-guide-api",
+  "version": "1.0.0",
+  "description": "The Pegasus City Guide API is a Node.js and Express application that provides users with access to information about different activities available in the city of Dallas. Users will be able to create an account, update their personal information, add and remove items from a to-do list, and see their local favorites.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
