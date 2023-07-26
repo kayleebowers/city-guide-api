@@ -4,7 +4,9 @@ const express = require("express"),
     //modules to log data, work with directories/file paths, write file streams
     morgan = require("morgan"),
     path = require("path"),
-    fs = require('fs');
+    fs = require('fs'),
+    //add cors to manage request origins
+    cors = require("cors");
 
 const app = express(); 
 
@@ -15,6 +17,11 @@ const logStream = fs.createWriteStream(path.join(__dirname, "log.txt"), { flags:
 
 //log HTTP method, date, endpoint, req status, res length
 app.use(morgan(":method :date[web] :url :status :res[content-length]", { stream: logStream }));
+
+//allow requests from all origins 
+app.use(cors());
+
+//user authentication
 
 //use bodyParser to read req.body JSON data and populate it in response body
 app.use(bodyParser.json());
