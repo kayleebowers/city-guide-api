@@ -15,7 +15,12 @@ const app = express(),
     Activities = models.Activity,
     Users = models.User; 
 
-mongoose.connect();
+//connect to online db
+mongoose.connect("mongodb+srv://MoviesDBAdmin:Bhm0hT94x1mBNDfr@moviesdb.ybzyezj.mongodb.net/CityGuideDB?retryWrites=true&w=majority", {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+});
+
 //order: logging, user authentication, JSON parsing, static file serving, and app routing
 
 //create log stream
