@@ -134,10 +134,15 @@ app.get("/activities", (req, res) => {
         res.status(500).send("Error: " + error);
       });
   });
-  
+
 // Add activity to to-do list	/users/:id/activities/:activitiesId	POST
 app.post("/users/:id/activities/:activitiesId", (req, res) => {
-  res.status(201);
+    Users.findOneAndUpdate({ _id: req.params.id },
+        { $addToSet: { Todos: req.params.activitiesId }},
+        { new: true })
+        .then((user) => {
+            res.status(200).json(user);
+        })
 });
 
 // Remove activity from to-do list	/users/:id/activities/:activitiesId	DELETE
