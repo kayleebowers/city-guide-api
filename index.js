@@ -193,7 +193,18 @@ app.post("/users/:id/completed/:activitiesId", (req, res) => {
 
 // Remove activity from completed list	/users/:id/activities/:completed	DELETE
 app.delete("/users/:id/completed/:activitiesId", (req, res) => {
-  res.status(200);
+  Users.findOneAndUpdate(
+    { _id: req.params.id },
+    { $pull: { Completed: req.params.activitiesId } },
+    { new: true }
+  )
+    .then((user) => {
+      res.status(200).json(user);
+    })
+    .catch((error) => {
+      console.error(error);
+      res.status(500).send("Error: " + error);
+    });
 });
 
 app.get("/", (req, res) => {
