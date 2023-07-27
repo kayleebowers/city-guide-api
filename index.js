@@ -9,12 +9,11 @@ const express = require("express"),
     cors = require("cors"),
     // add ODM
     mongoose = require('mongoose'),
-    { User } = require('./models.js'),
-    { Activity } = require('./models.js');;
+    models = require('./models.js');
 
 const app = express(),
-    Activities = Activity,
-    Users = User; 
+    Activities = models.Activity,
+    Users = models.User; 
 
 //connect to online db
 mongoose.connect("mongodb+srv://MoviesDBAdmin:Bhm0hT94x1mBNDfr@moviesdb.ybzyezj.mongodb.net/CityGuideDB?retryWrites=true&w=majority", {

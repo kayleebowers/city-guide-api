@@ -19,9 +19,13 @@ let userSchema = mongoose.Schema({
     Email: { type: String, required: true, lowercase: true },
     // define array types in reference to Activity schema
     Todos: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Activity' }],
-    Completed: [{ type: mongoose.Schema.Types.Boolean, ref: 'Activity' }]
+    Completed: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Activity' }]
 });
 
-//declare and export models 
-module.exports = mongoose.model("Activity", activitySchema);
-module.exports = mongoose.model("User", userSchema);
+//declare models
+let Activity = mongoose.model("Activity", activitySchema);
+let User = mongoose.model("User", userSchema);
+
+//export models 
+module.exports.Activity = Activity;
+module.exports.User = User;
