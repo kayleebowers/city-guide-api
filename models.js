@@ -1,6 +1,6 @@
 const mongoose = require('mongoose'),
-    bcrypt = require("bcrypt");
-const passport = require('passport');
+    bcrypt = require("bcrypt"),
+    passport = require('passport');
 
 //define activity schema
 let activitySchema = mongoose.Schema({
