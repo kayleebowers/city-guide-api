@@ -9,27 +9,25 @@ let Users = models.User,
 
 //basic HTTP authentication for login
 passport.use(
-  new LocalStrategy(
-    {
-      usernameField: "Username",
-      passwordField: "Password",
-    },
-    function (username, password, done) {
-      Users.findOne({ Username: username }, function (err, user) {
-        if (err) {
-          return done(err);
+    new LocalStrategy(
+      {
+        usernameField: "Username",
+        passwordField: "Password",
+      },
+      function (username, password, done) {
+        Users.findOne({ Username: username })
+          .then((user) => {
+            if (!user) {
+              return done(null, false, { message: "Incorrect username" });
+            } else if (!user.validatePassword(password)) {
+              return done(null, false, { message: "Incorrect password" });
+            } else {
+              return done(null, user);
+            }
+          })
         }
-        if (!user) {
-          return done(null, false, { message: "Incorrect username" });
-        }
-        if (!user.verifyPassword(password)) {
-          return done(null, false, { message: "Incorrect password" });
-        }
-        return done(null, user);
-      });
-    }
-  )
-);
+      )
+  );
 
 //authenticate with JWT
 passport.use(
