@@ -169,18 +169,13 @@ app.delete("/users/:id/activities/:activitiesId", (req, res) => {
 
 // Display all completed activities	/users/:id/activities/:completed	GET
 app.get("/users/:id/completed/", (req, res) => {
-  Users.find({ _id: req.params.id })
+    Users.findOne({ _id: req.params.id })
     .then((user) => {
-      if (user.Completed) {
-        res.status(200).json(user.Completed);
-      } else {
-        res.status(200).send("No completed tasks yet");
-      }
+        res.status(200).json(user);
+    }).catch((error) => {
+        console.error(error);
+        res.status(500).send("Error: " + error);
     })
-    .catch((error) => {
-      console.error(error);
-      res.status(500).send("Error: " + error);
-    });
 });
 
 // Add activity to completed list	/users/:id/completed/:activitiesId	POST
