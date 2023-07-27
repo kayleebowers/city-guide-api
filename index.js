@@ -41,11 +41,14 @@ app.use(
 //allow requests from all origins
 app.use(cors());
 
-//user authentication
-
 //use bodyParser to read req.body JSON data and populate it in response body
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+//import login route/authentication
+let auth = require('./auth')(app);
+const passport = require("passport");
+require("./passport");
 
 // Allow new users to register	/users	POST
 app.post("/users", (req, res) => {
