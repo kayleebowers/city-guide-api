@@ -3,7 +3,9 @@ const passport = require("passport"),
   models = require("./models.js"),
   passportJWT = require("passport-jwt");
 
-let Users = models.User; 
+let Users = models.User,
+  JWTStrategy = passportJWT.Strategy,
+  ExtractJWT = passportJWT.ExtractJwt; 
 
 //basic HTTP authentication for login
 passport.use(
@@ -31,10 +33,10 @@ passport.use(
 
 //authenticate with JWT
 passport.use(
-    new passportJWT.Strategy(
+    new JWTStrategy(
       {
         //get JWT from HTTP header
-        jwtFromRequest: passportJWT.ExtractJWT.fromAuthHeaderAsBearerToken(),
+        jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
         secretOrKey: "your_jwt_secret",
       },
       //act on claims in JWT
