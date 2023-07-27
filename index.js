@@ -142,6 +142,9 @@ app.post("/users/:id/activities/:activitiesId", (req, res) => {
         { new: true })
         .then((user) => {
             res.status(200).json(user);
+        }).catch((error) => {
+            console.error(error);
+            res.status(500).send("Error: " + error);
         })
 });
 
@@ -152,21 +155,38 @@ app.delete("/users/:id/activities/:activitiesId", (req, res) => {
         { new: true })
         .then((user) => {
             res.status(200).json(user);
+        }).catch((error) => {
+            console.error(error);
+            res.status(500).send("Error: " + error);
         })
 });
 
 // Display all completed activities	/users/:id/activities/:completed	GET
-app.get("/users/:id/activities/:completed", (req, res) => {
-  res.status(200);
+app.get("/users/:id/completed/", (req, res) => {
+    Users.find({ _id: req.params.id })
+    .then((user) => {
+        if (user.Completed) {
+            res.status(200).json(user.Completed);
+        } else {
+            res.status(200).send("No completed tasks yet")
+        }
+    }).catch((error) => {
+        console.error(error);
+        res.status(500).send("Error: " + error);
+    })
 });
 
-// Add activity to completed list	/users/:id/activities/:completed	POST
-app.post("/users/:id/activities/:completed", (req, res) => {
+// Add activity to completed list	/users/:id/activities/:activitiesId	POST
+app.post("/users/:id/completed/:activitiesId", (req, res) => {
+    Activities.find({ Completed: true })
+    .then((completedItems) => {
+        Users.findOneAndUpdate()
+    })
   res.status(201);
 });
 
 // Remove activity from completed list	/users/:id/activities/:completed	DELETE
-app.delete("/users/:id/activities/:completed", (req, res) => {
+app.delete("/users/:id/completed/:activitiesId", (req, res) => {
   res.status(200);
 });
 
