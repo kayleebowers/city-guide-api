@@ -18,9 +18,7 @@ const app = express(),
   Users = models.User;
 
 //connect to online db
-mongoose.connect(
-  "mongodb+srv://MoviesDBAdmin:Bhm0hT94x1mBNDfr@moviesdb.ybzyezj.mongodb.net/CityGuideDB?retryWrites=true&w=majority",
-  {
+mongoose.connect(process.env.CONNECTION_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   }
@@ -135,7 +133,7 @@ app.put(
     if (!errors.isEmpty()) {
       return res.status(422).json({ errors: errors.array() });
     }
-    
+
     let hashedPassword = Users.hashPassword(req.body.Password);
     Users.findOneAndUpdate(
       { _id: req.params.id },
