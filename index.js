@@ -92,12 +92,13 @@ app.get("/users/:id", passport.authenticate('jwt', { session: false }), (req, re
 
 // Allow users to update their user info	/users/:id	PUT
 app.put("/users/:id", passport.authenticate('jwt', { session: false }), (req, res) => {
+  let hashedPassword = Users.hashPassword(req.body.Password);
   Users.findOneAndUpdate(
     { _id: req.params.id },
     {
       $set: {
         Username: req.body.Username,
-        Password: req.body.Password,
+        Password: hashedPassword,
         Email: req.body.Email,
       },
     },
