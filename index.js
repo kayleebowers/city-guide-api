@@ -77,7 +77,7 @@ app.post("/users", (req, res) => {
 });
 
 // Allow users to view their profile	/users/:id	GET
-app.get("/users/:id", (req, res) => {
+app.get("/users/:id", passport.authenticate('jwt', { session: false }), (req, res) => {
   Users.findOne({ _id: req.params.id })
     .then((user) => {
       res.status(200).json(user);
@@ -89,7 +89,7 @@ app.get("/users/:id", (req, res) => {
 });
 
 // Allow users to update their user info	/users/:id	PUT
-app.put("/users/:id", (req, res) => {
+app.put("/users/:id", passport.authenticate('jwt', { session: false }), (req, res) => {
   Users.findOneAndUpdate(
     { _id: req.params.id },
     {
@@ -115,7 +115,7 @@ app.put("/users/:id", (req, res) => {
 });
 
 // Allow existing users to delete their account	/users/:id	DELETE
-app.delete("/users/:id", (req, res) => {
+app.delete("/users/:id", passport.authenticate('jwt', { session: false }), (req, res) => {
   Users.deleteOne({ _id: req.params.id })
     .then((user) => {
       res.status(200).send("Your account was deleted");
@@ -139,7 +139,7 @@ app.get("/activities", (req, res) => {
 });
 
 // Add activity to to-do list	/users/:id/activities/:activitiesId	POST
-app.post("/users/:id/activities/:activitiesId", (req, res) => {
+app.post("/users/:id/activities/:activitiesId", passport.authenticate('jwt', { session: false }), (req, res) => {
   Users.findOneAndUpdate(
     { _id: req.params.id },
     { $addToSet: { Todos: req.params.activitiesId } },
@@ -155,7 +155,7 @@ app.post("/users/:id/activities/:activitiesId", (req, res) => {
 });
 
 // Remove activity from to-do list	/users/:id/activities/:activitiesId	DELETE
-app.delete("/users/:id/activities/:activitiesId", (req, res) => {
+app.delete("/users/:id/activities/:activitiesId", passport.authenticate('jwt', { session: false }), (req, res) => {
   Users.findOneAndUpdate(
     { _id: req.params.id },
     { $pull: { Todos: req.params.activitiesId } },
@@ -171,7 +171,7 @@ app.delete("/users/:id/activities/:activitiesId", (req, res) => {
 });
 
 // Display all completed activities	/users/:id/activities/:completed	GET
-app.get("/users/:id/completed/", (req, res) => {
+app.get("/users/:id/completed/", passport.authenticate('jwt', { session: false }), (req, res) => {
     Users.findOne({ _id: req.params.id })
     .then((user) => {
         res.status(200).json(user);
@@ -182,7 +182,7 @@ app.get("/users/:id/completed/", (req, res) => {
 });
 
 // Add activity to completed list	/users/:id/completed/:activitiesId	POST
-app.post("/users/:id/completed/:activitiesId", (req, res) => {
+app.post("/users/:id/completed/:activitiesId", passport.authenticate('jwt', { session: false }), (req, res) => {
     Users.findOneAndUpdate({ _id: req.params.id }, 
         { $addToSet: { Completed: req.params.activitiesId }},
         { new: true }
@@ -195,7 +195,7 @@ app.post("/users/:id/completed/:activitiesId", (req, res) => {
 });
 
 // Remove activity from completed list	/users/:id/activities/:completed	DELETE
-app.delete("/users/:id/completed/:activitiesId", (req, res) => {
+app.delete("/users/:id/completed/:activitiesId", passport.authenticate('jwt', { session: false }), (req, res) => {
   Users.findOneAndUpdate(
     { _id: req.params.id },
     { $pull: { Completed: req.params.activitiesId } },
