@@ -194,7 +194,7 @@ app.post("/users/:id/completed/:activitiesId", (req, res) => {
           { new: true }
         );
       } else {
-        res.send("You have no completed activities");
+        res.send("This activity is not completed");
       }
     })
     .catch((error) => {
