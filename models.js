@@ -1,5 +1,6 @@
 const mongoose = require('mongoose'),
     bcrypt = require("bcrypt");
+const passport = require('passport');
 
 //define activity schema
 let activitySchema = mongoose.Schema({
@@ -22,6 +23,16 @@ let userSchema = mongoose.Schema({
     Todos: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Activity' }],
     Completed: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Activity' }]
 });
+
+//hash passwords added to userSchema
+userSchema.statics.hashPassword = function(password) {
+    return bcrypt.hashSync(password, 10);
+}
+
+//compare userSchema hashed passwords to db
+userSchema.methods.validatePassword = function(password) {
+    return bcrypt.compareSync(password, this.Password);
+}
 
 //declare models
 let Activity = mongoose.model("Activity", activitySchema);
