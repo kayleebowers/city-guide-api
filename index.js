@@ -113,75 +113,81 @@ app.put("/users/:id", (req, res) => {
 
 // Allow existing users to delete their account	/users/:id	DELETE
 app.delete("/users/:id", (req, res) => {
-    Users.deleteOne({ _id: req.params.id })
-      .then((user) => {
-        res.status(200).send("Your account was deleted");
-      })
-      .catch((error) => {
-        console.error(error);
-        res.status(500).send("Error: " + error);
-      });
-  });
+  Users.deleteOne({ _id: req.params.id })
+    .then((user) => {
+      res.status(200).send("Your account was deleted");
+    })
+    .catch((error) => {
+      console.error(error);
+      res.status(500).send("Error: " + error);
+    });
+});
 
 // Return a list of all activities to the user	/activities	GET
 app.get("/activities", (req, res) => {
-    Activities.find()
-      .then((activities) => {
-        res.status(200).json(activities);
-      })
-      .catch((error) => {
-        console.error(error);
-        res.status(500).send("Error: " + error);
-      });
-  });
+  Activities.find()
+    .then((activities) => {
+      res.status(200).json(activities);
+    })
+    .catch((error) => {
+      console.error(error);
+      res.status(500).send("Error: " + error);
+    });
+});
 
 // Add activity to to-do list	/users/:id/activities/:activitiesId	POST
 app.post("/users/:id/activities/:activitiesId", (req, res) => {
-    Users.findOneAndUpdate({ _id: req.params.id },
-        { $addToSet: { Todos: req.params.activitiesId }},
-        { new: true })
-        .then((user) => {
-            res.status(200).json(user);
-        }).catch((error) => {
-            console.error(error);
-            res.status(500).send("Error: " + error);
-        })
+  Users.findOneAndUpdate(
+    { _id: req.params.id },
+    { $addToSet: { Todos: req.params.activitiesId } },
+    { new: true }
+  )
+    .then((user) => {
+      res.status(200).json(user);
+    })
+    .catch((error) => {
+      console.error(error);
+      res.status(500).send("Error: " + error);
+    });
 });
 
 // Remove activity from to-do list	/users/:id/activities/:activitiesId	DELETE
 app.delete("/users/:id/activities/:activitiesId", (req, res) => {
-    Users.findOneAndUpdate({ _id: req.params.id },
-        { $pull: { Todos: req.params.activitiesId }},
-        { new: true })
-        .then((user) => {
-            res.status(200).json(user);
-        }).catch((error) => {
-            console.error(error);
-            res.status(500).send("Error: " + error);
-        })
+  Users.findOneAndUpdate(
+    { _id: req.params.id },
+    { $pull: { Todos: req.params.activitiesId } },
+    { new: true }
+  )
+    .then((user) => {
+      res.status(200).json(user);
+    })
+    .catch((error) => {
+      console.error(error);
+      res.status(500).send("Error: " + error);
+    });
 });
 
 // Display all completed activities	/users/:id/activities/:completed	GET
 app.get("/users/:id/completed/", (req, res) => {
-    Users.find({ _id: req.params.id })
+  Users.find({ _id: req.params.id })
     .then((user) => {
-        if (user.Completed) {
-            res.status(200).json(user.Completed);
-        } else {
-            res.status(200).send("No completed tasks yet")
-        }
-    }).catch((error) => {
-        console.error(error);
-        res.status(500).send("Error: " + error);
+      if (user.Completed) {
+        res.status(200).json(user.Completed);
+      } else {
+        res.status(200).send("No completed tasks yet");
+      }
     })
+    .catch((error) => {
+      console.error(error);
+      res.status(500).send("Error: " + error);
+    });
 });
 
 // Add activity to completed list	/users/:id/activities/:activitiesId	POST
 app.post("/users/:id/completed/:activitiesId", (req, res) => {
-    Activities.find({ Completed: true })
-    .then((completedItems) => {
-        Users.findOneAndUpdate()
-    })
+  Activities.find({ Completed: true }).then((completedItems) => {
+    Users.findOneAndUpdate();
+  });
   res.status(201);
 });
 
