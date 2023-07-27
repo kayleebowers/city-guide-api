@@ -63,7 +63,14 @@ app.post("/users", (req, res) => {
 
 // Allow users to view their profile	/users/:id	GET
 app.get("/users/:id", (req, res) => {
-    res.status(200);
+    Users.findOne({ _id: req.params.id})
+    .then((user) => {
+        res.status(200).json(user);
+    })
+    .catch((error) => {
+        console.error(error);
+        res.status(500).send("Error: " + error);
+    })
 })
 
 // Allow users to update their user info	/users/:id	PUT
