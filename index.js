@@ -9,7 +9,9 @@ const express = require("express"),
   cors = require("cors"),
   // add ODM
   mongoose = require("mongoose"),
-  models = require("./models.js");
+  models = require("./models.js"),
+  //add express validator
+  { check, validationResult } = require("express-validator");
 
 const app = express(),
   Activities = models.Activity,
@@ -46,88 +48,123 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 //import login route/authentication
-let auth = require('./auth')(app);
+let auth = require("./auth")(app);
 const passport = require("passport");
 require("./passport");
 
 // Allow new users to register	/users	POST
-app.post("/users", (req, res) => {
-  let hashedPassword = Users.hashPassword(req.body.Password);
+app.post(
+  "/users",
+  //validate input on server side
+  [
+    check("Username", "Username must be five characters or more")
+      .isLength({ min: 5 })
+      .isAlphanumeric(),
+    check("Password", "Password must be five characters or more").isLength({
+      min: 5,
+    }),
+    check("Email", "Email is required").isEmail(),
+  ],
+  (req, res) => {
+    let hashedPassword = Users.hashPassword(req.body.Password);
 
-  Users.findOne({ Username: req.body.Username })
-    .then((user) => {
-      if (user) {
-        res.status(400).send("User already exists");
-      } else {
-        Users.create({
+    Users.findOne({ Username: req.body.Username })
+      .then((user) => {
+        if (user) {
+          res.status(400).send("User already exists");
+        } else {
+          Users.create({
+            Username: req.body.Username,
+            Password: hashedPassword,
+            Email: req.body.Email,
+          })
+            .then((user) => {
+              res.status(201).json(user);
+            })
+            .catch((error) => {
+              res.status(500);
+            });
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        res.status(500).send("Error: " + error);
+      });
+  }
+);
+
+// Allow users to view their profile	/users/:id	GET
+app.get(
+  "/users/:id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Users.findOne({ _id: req.params.id })
+      .then((user) => {
+        res.status(200).json(user);
+      })
+      .catch((error) => {
+        console.error(error);
+        res.status(500).send("Error: " + error);
+      });
+  }
+);
+
+// Allow users to update their user info	/users/:id	PUT
+app.put(
+  "/users/:id",
+  passport.authenticate("jwt", { session: false }),
+  //validate input on server side
+  [
+    check("Username", "Username must be five characters or more")
+      .isLength({ min: 5 })
+      .isAlphanumeric(),
+    check("Password", "Password must be five characters or more").isLength({
+      min: 5,
+    }),
+    check("Email", "Email is required").isEmail(),
+  ],
+  (req, res) => {
+    let hashedPassword = Users.hashPassword(req.body.Password);
+    Users.findOneAndUpdate(
+      { _id: req.params.id },
+      {
+        $set: {
           Username: req.body.Username,
           Password: hashedPassword,
           Email: req.body.Email,
-        })
-          .then((user) => {
-            res.status(201).json(user);
-          })
-          .catch((error) => {
-            res.status(500);
-          });
-      }
-    })
-    .catch((error) => {
-      console.error(error);
-      res.status(500).send("Error: " + error);
-    });
-});
-
-// Allow users to view their profile	/users/:id	GET
-app.get("/users/:id", passport.authenticate('jwt', { session: false }), (req, res) => {
-  Users.findOne({ _id: req.params.id })
-    .then((user) => {
-      res.status(200).json(user);
-    })
-    .catch((error) => {
-      console.error(error);
-      res.status(500).send("Error: " + error);
-    });
-});
-
-// Allow users to update their user info	/users/:id	PUT
-app.put("/users/:id", passport.authenticate('jwt', { session: false }), (req, res) => {
-  let hashedPassword = Users.hashPassword(req.body.Password);
-  Users.findOneAndUpdate(
-    { _id: req.params.id },
-    {
-      $set: {
-        Username: req.body.Username,
-        Password: hashedPassword,
-        Email: req.body.Email,
+        },
       },
-    },
-    { new: true }
-  )
-    .then((updatedUser) => {
-      if (!updatedUser) {
-        return res.status(404).send("User does not exist");
-      } else {
-        res.status(200).json(updatedUser);
-      }
-    })
-    .catch((error) => {
-      console.error(error);
-      res.status(500).send("Error: " + error);
-    });
-});
+      { new: true }
+    )
+      .then((updatedUser) => {
+        if (!updatedUser) {
+          return res.status(404).send("User does not exist");
+        } else {
+          res.status(200).json(updatedUser);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        res.status(500).send("Error: " + error);
+      });
+  }
+);
 
 // Allow existing users to delete their account	/users/:id	DELETE
-app.delete("/users/:id", passport.authenticate('jwt', { session: false }), (req, res) => {
-  Users.deleteOne({ _id: req.params.id })
-    .then((user) => {
-      res.status(200).send("Your account was deleted");
-    })
-    .catch((error) => {
-      console.error(error);
-      res.status(500).send("Error: " + error);
-    });
-});
+app.delete(
+  "/users/:id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Users.deleteOne({ _id: req.params.id })
+      .then((user) => {
+        res.status(200).send("Your account was deleted");
+      })
+      .catch((error) => {
+        console.error(error);
+        res.status(500).send("Error: " + error);
+      });
+  }
+);
 
 // Return a list of all activities to the user	/activities	GET
 app.get("/activities", (req, res) => {
@@ -142,76 +179,100 @@ app.get("/activities", (req, res) => {
 });
 
 // Add activity to to-do list	/users/:id/activities/:activitiesId	POST
-app.post("/users/:id/activities/:activitiesId", passport.authenticate('jwt', { session: false }), (req, res) => {
-  Users.findOneAndUpdate(
-    { _id: req.params.id },
-    { $addToSet: { Todos: req.params.activitiesId } },
-    { new: true }
-  )
-    .then((user) => {
-      res.status(200).json(user);
-    })
-    .catch((error) => {
-      console.error(error);
-      res.status(500).send("Error: " + error);
-    });
-});
+app.post(
+  "/users/:id/activities/:activitiesId",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Users.findOneAndUpdate(
+      { _id: req.params.id },
+      { $addToSet: { Todos: req.params.activitiesId } },
+      { new: true }
+    )
+      .then((user) => {
+        res.status(200).json(user);
+      })
+      .catch((error) => {
+        console.error(error);
+        res.status(500).send("Error: " + error);
+      });
+  }
+);
 
 // Remove activity from to-do list	/users/:id/activities/:activitiesId	DELETE
-app.delete("/users/:id/activities/:activitiesId", passport.authenticate('jwt', { session: false }), (req, res) => {
-  Users.findOneAndUpdate(
-    { _id: req.params.id },
-    { $pull: { Todos: req.params.activitiesId } },
-    { new: true }
-  )
-    .then((user) => {
-      res.status(200).json(user);
-    })
-    .catch((error) => {
-      console.error(error);
-      res.status(500).send("Error: " + error);
-    });
-});
+app.delete(
+  "/users/:id/activities/:activitiesId",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Users.findOneAndUpdate(
+      { _id: req.params.id },
+      { $pull: { Todos: req.params.activitiesId } },
+      { new: true }
+    )
+      .then((user) => {
+        res.status(200).json(user);
+      })
+      .catch((error) => {
+        console.error(error);
+        res.status(500).send("Error: " + error);
+      });
+  }
+);
 
 // Display all completed activities	/users/:id/activities/:completed	GET
-app.get("/users/:id/completed/", passport.authenticate('jwt', { session: false }), (req, res) => {
+app.get(
+  "/users/:id/completed/",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
     Users.findOne({ _id: req.params.id })
-    .then((user) => {
+      .then((user) => {
         res.status(200).json(user);
-    }).catch((error) => {
+      })
+      .catch((error) => {
         console.error(error);
         res.status(500).send("Error: " + error);
-    })
-});
+      });
+  }
+);
 
 // Add activity to completed list	/users/:id/completed/:activitiesId	POST
-app.post("/users/:id/completed/:activitiesId", passport.authenticate('jwt', { session: false }), (req, res) => {
-    Users.findOneAndUpdate({ _id: req.params.id }, 
-        { $addToSet: { Completed: req.params.activitiesId }},
-        { new: true }
-    ).then((user) => {
+app.post(
+  "/users/:id/completed/:activitiesId",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Users.findOneAndUpdate(
+      { _id: req.params.id },
+      { $addToSet: { Completed: req.params.activitiesId } },
+      { new: true }
+    )
+      .then((user) => {
         res.status(200).json(user);
-    }).catch((error) => {
+      })
+      .catch((error) => {
         console.error(error);
         res.status(500).send("Error: " + error);
-    })
-});
+      });
+  }
+);
 
 // Remove activity from completed list	/users/:id/activities/:completed	DELETE
-app.delete("/users/:id/completed/:activitiesId", passport.authenticate('jwt', { session: false }), (req, res) => {
-  Users.findOneAndUpdate(
-    { _id: req.params.id },
-    { $pull: { Completed: req.params.activitiesId } },
-    { new: true }
-  )
-    .then((user) => {
-      res.status(200).json(user);
-    })
-    .catch((error) => {
-      console.error(error);
-      res.status(500).send("Error: " + error);
-    });
-});
+app.delete(
+  "/users/:id/completed/:activitiesId",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Users.findOneAndUpdate(
+      { _id: req.params.id },
+      { $pull: { Completed: req.params.activitiesId } },
+      { new: true }
+    )
+      .then((user) => {
+        res.status(200).json(user);
+      })
+      .catch((error) => {
+        console.error(error);
+        res.status(500).send("Error: " + error);
+      });
+  }
+);
 
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public/documentation.html"));
