@@ -50,7 +50,7 @@ app.post("/users", (req, res) => {
                     Password: req.body.Password,
                     Email: req.body.Email
                 }).then((user) => {
-                    res.status(201).json();
+                    res.status(201).json(user);
                 }).catch((error) => {
                     res.status(500);
                 })
