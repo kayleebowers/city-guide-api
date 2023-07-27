@@ -30,3 +30,24 @@ passport.use(
     }
   )
 );
+
+//authenticate with JWT
+passport.use(
+    new JWTStrategy(
+      {
+        //get JWT from HTTP header
+        jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
+        secretOrKey: "your_jwt_secret",
+      },
+      //act on claims in JWT
+      (jwtPayload, callback) => {
+        return Users.findOne({ _id: jwtPayload._id })
+          .then((user) => {
+            return callback(null, user);
+          })
+          .catch((error) => {
+            return callback(error);
+          });
+      }
+    )
+  );
