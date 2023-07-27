@@ -147,7 +147,12 @@ app.post("/users/:id/activities/:activitiesId", (req, res) => {
 
 // Remove activity from to-do list	/users/:id/activities/:activitiesId	DELETE
 app.delete("/users/:id/activities/:activitiesId", (req, res) => {
-  res.status(200);
+    Users.findOneAndUpdate({ _id: req.params.id },
+        { $pull: { Todos: req.params.activitiesId }},
+        { new: true })
+        .then((user) => {
+            res.status(200).json(user);
+        })
 });
 
 // Display all completed activities	/users/:id/activities/:completed	GET
