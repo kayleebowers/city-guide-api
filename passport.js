@@ -3,15 +3,19 @@ const passport = require("passport"),
   models = require("./models.js"),
   passportJWT = require("passport-jwt");
 
+let Users = models.User,
+  JWTStrategy = passportJWT.Strategy,
+  ExtractJWT = passportJWT.ExtractJwt;
+
 //basic HTTP authentication for login
 passport.use(
   new LocalStrategy(
     {
-      usernameField: Username,
-      passwordField: Password,
+      usernameField: "Username",
+      passwordField: "Password",
     },
     function (username, password, done) {
-      User.findOne({ Username: username }, function (err, user) {
+      Users.findOne({ Username: username }, function (err, user) {
         if (err) {
           return done(err);
         }
