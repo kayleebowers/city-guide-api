@@ -40,7 +40,25 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Allow new users to register	/users	POST
 app.post("/users", (req, res) => {
-    res.status(201);
+    Users.findOne({ Username: req.body.Username })
+        .then((user) => {
+            if (user) {
+                res.status(400).send("User already exists");
+            } else {
+                Users.create({
+                    Username: req.body.Username,
+                    Password: req.body.Password,
+                    Email: req.body.Email
+                }).then((user) => {
+                    res.status(201).json();
+                }).catch((error) => {
+                    res.status(500);
+                })
+            }
+        }).catch((error) => {
+            console.error(error);
+            res.status(500).send("Error: " + error);
+        })
 })
 
 // Allow users to view their profile	/users/:id	GET
