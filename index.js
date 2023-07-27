@@ -183,24 +183,17 @@ app.get("/users/:id/completed/", (req, res) => {
     });
 });
 
-// Add activity to completed list	/users/:id/activities/:activitiesId	POST
+// Add activity to completed list	/users/:id/completed/:activitiesId	POST
 app.post("/users/:id/completed/:activitiesId", (req, res) => {
-  Activities.findOne({ _id: req.params.activitiesId })
-    .then((activity) => {
-      if (activity.Completed == true) {
-        Users.findOneAndUpdate(
-          { _id: req.params.id },
-          { $addToSet: { Completed: req.params.activitiesId } },
-          { new: true }
-        );
-      } else {
-        res.send("This activity is not completed");
-      }
+    Users.findOneAndUpdate({ _id: req.params.id }, 
+        { $addToSet: { Completed: req.params.activitiesId }},
+        { new: true }
+    ).then((user) => {
+        res.status(200).json(user);
+    }).catch((error) => {
+        console.error(error);
+        res.status(500).send("Error: " + error);
     })
-    .catch((error) => {
-      console.error(error);
-      res.status(500).send("Error: " + error);
-    });
 });
 
 // Remove activity from completed list	/users/:id/activities/:completed	DELETE
