@@ -1,6 +1,4 @@
 const express = require("express"),
-  //middleware to read json in req.body
-  bodyParser = require("body-parser"),
   //modules to log data, work with directories/file paths, write file streams
   morgan = require("morgan"),
   path = require("path"),
