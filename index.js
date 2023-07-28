@@ -41,9 +41,13 @@ app.use(
 //allow requests from all origins
 app.use(cors());
 
-//use bodyParser to read req.body JSON data and populate it in response body
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+//use bodyParser in older versions of express 
+// app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({ extended: true }));
+
+//read req.body JSON data and populate it in response body
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 //import login route/authentication
 let auth = require("./auth")(app);
