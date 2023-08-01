@@ -190,6 +190,22 @@ app.get("/activities", (req, res) => {
     });
 });
 
+// Display all todo list activities	/users/:id/activities	GET
+app.get(
+  "/users/:id/activities/",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Users.findOne({ _id: req.params.id })
+      .then((user) => {
+        res.status(200).json(user);
+      })
+      .catch((error) => {
+        console.error(error);
+        res.status(500).send("Error: " + error);
+      });
+  }
+);
+
 // Add activity to to-do list	/users/:id/activities/:activitiesId	POST
 app.post(
   "/users/:id/activities/:activitiesId",
