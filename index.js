@@ -37,7 +37,7 @@ app.use(
 );
 
 //allow requests from all origins
-app.use(cors());
+// app.use(cors());
 
 let allowedOrigins = ["https://pegasus-city-guide.netlify.app/"];
 
