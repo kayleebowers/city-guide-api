@@ -39,7 +39,7 @@ app.use(
 //allow requests from all origins
 // app.use(cors());
 
-let allowedOrigins = ["https://pegasus-city-guide.netlify.app"];
+let allowedOrigins = ["https://pegasus-city-guide.netlify.app", "https://vigilant-meme-rqqpg74j9gwhxpjv-1234.app.github.dev"];
 
 app.use(cors({
   origin: (origin, callback) => {
