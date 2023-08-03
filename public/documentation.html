@@ -109,13 +109,16 @@
     <h3>Allow existing users to delete their account</h3>
         <p>Using https://city-guide-api-3d2f74a4c59e.herokuapp.com/users/:id with the DELETE method will return the HTML response: "Your account was deleted." No response body is required. The query requires the user ID as a parameter. The example https://city-guide-api-3d2f74a4c59e.herokuapp.com/users/64c2a4ec799ddbb40e98a73f/ would return the HTML response, "Your account was deleted."</p>
     <h3>Return a list of all activities to the user</h3>
+        <p>Using https://city-guide-api-3d2f74a4c59e.herokuapp.com/activities will return an array of activity objects in JSON format. The method type is GET and has no response body. The query requires no parameters.</p>
     <h3>Add activity to to-do list</h3>
+        <p>Using https://movies-app1-3d6bd65a6f09.herokuapp.com/users/:id/activities/:activitiesId with the POST method will return a JSON object with all of that user's data, including their expanded to-do list. The query has no body but must include an existing user ID and an activity ID as parameters. The example https://city-guide-api-3d2f74a4c59e.herokuapp.com/users/64c2a4ec799ddbb40e98a73f/activities/64c153126181b19b214b4314 would return a JSON object displaying all of the user's data, along with their new to-do activity.</p>
     <h3>Remove activity from to-do list</h3>
+        <p>Using https://movies-app1-3d6bd65a6f09.herokuapp.com/users/:id/activities/:activitiesId with the DELETE method will return a JSON object with all of that user's data, including their shortened to-do list. The query has no body but must include an existing user ID and an activity ID as parameters. The example https://city-guide-api-3d2f74a4c59e.herokuapp.com/users/64c2a4ec799ddbb40e98a73f/activities/64c153126181b19b214b4314 would return a JSON object displaying all of the user's data, along with their shorter to-do list.</p>
     <h3>Display all completed activities</h3>
+        <p>Using https://movies-app1-3d6bd65a6f09.herokuapp.com/users/:id/completed/ with the GET method will return a JSON object with all of that user's current data. The query has no body but must include an existing user ID as a parameter. The example https://city-guide-api-3d2f74a4c59e.herokuapp.com/users/64c2a4ec799ddbb40e98a73f/completed/ would return a JSON object displaying all of the user's data.</p>
     <h3>Add activity to completed list</h3>
+        <p>Using https://movies-app1-3d6bd65a6f09.herokuapp.com/users/:id/completed/:activitiesId with the POST method will return a JSON object with all of that user's data, including their expanded completed activities list. The query has no body but must include an existing user ID and an activity ID as parameters. The example https://city-guide-api-3d2f74a4c59e.herokuapp.com/users/64c2a4ec799ddbb40e98a73f/completed/64c153126181b19b214b4314 would return a JSON object displaying all of the user's data, along with their new completed activity.</p>
     <h3>Remove activity from completed list</h3>
-
-
-    
+        <p>Using https://movies-app1-3d6bd65a6f09.herokuapp.com/users/:id/completed/:activitiesId with the POST method will return a JSON object with all of that user's data, including their expanded to-do list. The query has no body but must include an existing user ID and an activity ID as parameters. The example https://city-guide-api-3d2f74a4c59e.herokuapp.com/users/64c2a4ec799ddbb40e98a73f/completed/64c153126181b19b214b4314 would return a JSON object displaying all of the user's data, along with their shorter completed activities list.</p> 
 </body>
 </html>
