@@ -89,7 +89,25 @@
           }</code>.
         </p>
     <h3>Allow users to update their user info</h3>
+        <p>Using https://city-guide-api-3d2f74a4c59e.herokuapp.com/users/:id/ with the PUT method will return a JSON object displaying all of the user's updated information. A user ID is required as the parameter, and the request must include a request body in the following format: 
+          <code>{
+            Username: String,
+            (required)
+            Password: String,
+            (required)
+            Email: String,
+            (required)
+          }</code>. 
+          For example, https://city-guide-api-3d2f74a4c59e.herokuapp.com/users/64c2a4ec799ddbb40e98a73f/ would have a request body as follows: 
+          <code>{
+            "Username": "example1",
+            "Password": "example",
+            "Email": "example@email.com"
+          }</code>.
+          A successful response returns all the existing user data, which will include the updated sections.
+        </p>
     <h3>Allow existing users to delete their account</h3>
+        <p>Using https://city-guide-api-3d2f74a4c59e.herokuapp.com/users/:id with the DELETE method will return the HTML response: "Your account was deleted." No response body is required. The query requires the user ID as a parameter. The example https://city-guide-api-3d2f74a4c59e.herokuapp.com/users/64c2a4ec799ddbb40e98a73f/ would return the HTML response, "Your account was deleted."</p>
     <h3>Return a list of all activities to the user</h3>
     <h3>Add activity to to-do list</h3>
     <h3>Remove activity from to-do list</h3>
